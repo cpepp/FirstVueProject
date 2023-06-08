@@ -12,7 +12,6 @@ const highestScore = ref(0);
 
 function getRandomPokemonService() {
   getRandomPokemon().then(response => {
-    console.log(response)
     randomPokemonInfo.value = response;
     randomPokemon.value = response.name;
     randomPokemonImage.value = response.sprites.other['official-artwork'].front_default;
@@ -25,6 +24,7 @@ function submitUserGuess() {
     currentScore.value++;
     if(currentScore.value > highestScore.value){
       highestScore.value = currentScore.value;
+      localStorage.setItem('highestScore', highestScore.value)
     }
     userGuess.value = '';
     
@@ -35,6 +35,8 @@ function submitUserGuess() {
 }
 
 onMounted(() => {
+  highestScore.value = localStorage.getItem('highestScore');
+
   getRandomPokemonService();
 })
 
