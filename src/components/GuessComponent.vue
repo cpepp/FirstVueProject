@@ -9,6 +9,7 @@ const randomPokemonInfo = ref();
 const randomPokemonImage = ref();
 const currentScore = ref(0);
 const highestScore = ref(0);
+const failStreak = ref(0);
 
 function getRandomPokemonService() {
   getRandomPokemon().then(response => {
@@ -27,10 +28,17 @@ function submitUserGuess() {
       localStorage.setItem('highestScore', highestScore.value)
     }
     userGuess.value = '';
+    guessMsg.value = '';
     
   } else {
     guessMsg.value = "Streak ended";
     currentScore.value = 0;
+    failStreak.value++; //If the user doesn't guess in 3 tries, move on.
+    if(failStreak.value > 2){
+      guessMsg.value = "The Pokemon was " + randomPokemon.value + "!";
+      getRandomPokemonService();
+      failStreak.value = 0;
+    }
   }
 }
 
