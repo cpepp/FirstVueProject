@@ -16,6 +16,7 @@ const showInfo = ref(false);
 const learnMore = ref(false);
 
 function reset() {
+  //Can access/mutate values of refs using .value
   userGuess.value = '';
   showInfo.value = false;
   guessMsg.value = '';
@@ -68,24 +69,36 @@ onMounted(() => {
 
 <template>
   <div id="guessInfo">
-    <img v-if="randomPokemonInfo" v-bind:src="randomPokemonImage" />
-    <form @submit.prevent="submitUserGuess">
-      <input id="userGuessInput" v-model="userGuess">
-    </form>
-    <p>Current streak: {{ currentScore }}</p>
-    <p>Your longest streak is: {{ highestScore }}</p>
-    <p>{{ guessMsg }}</p>
-  </div>
+    <div id="guessInfo">
+      <!-- 
+        Binding element attributes/properties using v-bind (:src short for v-bind:src) 
+        Conditionals using v-if, v-else-if, and v-else directives
+      -->
+      <img v-if="randomPokemonInfo" :src="randomPokemonImage" />
+      <p v-else> Unable to fetch image. </p>
+      <form @submit.prevent="submitUserGuess">
+        <!-- Two-way bindings between state and form inputs -->
+        <input id="userGuessInput" v-model="userGuess">
+      </form>
+      <!-- Using refs in templates don't need .value -->
+      <p>Current streak: {{ currentScore }}</p>
+      <p>Your longest streak is: {{ highestScore }}</p>
+      <p>{{ guessMsg }}</p>
+    </div>
 
-  <div id="failInfo">
-    <button v-if="showInfo" @click="learnMore = !learnMore">
-      Learn more about {{ randomPokemonName }}
-    </button>
-    <button v-if="showInfo" @click="getRandomPokemonService()">
-      Try Again?
-    </button>
-    <div v-if="learnMore">
-      <PokemonPage :randomPokemonInfo="randomPokemonInfo" :specificPokemonInfo="specificPokemonInfo" />
+    <div id="failInfo">
+      <!-- Binding click event using @click (short for v-on:click) 
+         Can use an in-line expression or method from the script
+      -->
+      <button v-if="showInfo" @click="learnMore = !learnMore">
+        Learn more about {{ randomPokemonName }}
+      </button>
+      <button v-if="showInfo" @click="getRandomPokemonService()">
+        Try Again?
+      </button>
+      <div v-if="learnMore">
+        <PokemonPage :randomPokemonInfo="randomPokemonInfo" :specificPokemonInfo="specificPokemonInfo" />
+      </div>
     </div>
   </div>
 </template>
